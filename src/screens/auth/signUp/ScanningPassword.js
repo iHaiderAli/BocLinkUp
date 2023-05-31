@@ -1,20 +1,20 @@
-import { StyleSheet, Text, View, ImageBackground } from "react-native";
+import { StyleSheet, Text, View } from "react-native";
 import React, { useEffect, useState } from "react";
 import { _styles } from "./styles";
 import { Colors, Layout, Typography } from "../../../styles";
-import LinearGradient from "react-native-linear-gradient";
 import SvgContainer from "../../../components/app/svgContainer";
 import { SVG_STRINGS } from "../../../../assets/svgStrings";
-import LabelItem from "../../../components/app/labelItem";
 import AbstractButton from "../../../components/app/abstractButton";
-import { NavigationContainer } from "@react-navigation/native";
 import WrapPasswordTypes from "./wrapPasswordTypes";
 import Routes from "../../../navigation/Routes";
 import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
+import { useAtom } from 'jotai'
+import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
 
 const ScanningPassword = ({ backCall, navigation }) => {
   const [scanned, setScanned] = useState(false);
   const rnBiometrics = new ReactNativeBiometrics()
+  const [bocAtom, setBocAtom] = useAtom(BocApplicationAtom)
 
   useEffect(async () => {
     const { biometryType } = await rnBiometrics.isSensorAvailable()
@@ -36,6 +36,7 @@ const ScanningPassword = ({ backCall, navigation }) => {
           console.log('Biometrics not supported')
         }
       })
+
     rnBiometrics.biometricKeysExist()
       .then((resultObject) => {
         const { keysExist } = resultObject
@@ -43,11 +44,16 @@ const ScanningPassword = ({ backCall, navigation }) => {
         if (keysExist) {
           rnBiometrics.simplePrompt({ promptMessage: 'Confirm fingerprint' })
             .then((resultObject) => {
+              // console.log("Testing", resultObject)
               const { success } = resultObject
 
               if (success) {
                 console.log('successful biometrics provided')
                 setScanned(true);
+                setBocAtom((bocAtom) => ({
+                  ...bocAtom,
+                  scanningPassword: resultObject
+                }))
               } else {
                 console.log('user cancelled biometric prompt')
               }
@@ -59,6 +65,7 @@ const ScanningPassword = ({ backCall, navigation }) => {
           console.log('Keys do not exist or were deleted')
         }
       })
+
     // rnBiometrics.biometricKeysExist()
     // .then((resultObject) => {
     //   const { keysExist } = resultObject
@@ -129,7 +136,6 @@ const ScanningPassword = ({ backCall, navigation }) => {
             outerHeight={40}
             onPressButton={() => {
               backCall && backCall();
-              navigation && navigation.navigate(Routes.SELECTION_FIELD_SIGNUP);
             }}
           />
         )}

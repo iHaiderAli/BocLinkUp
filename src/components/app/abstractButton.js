@@ -20,7 +20,6 @@ const AbstractButton = ({
     _style,
     onPressButton,
     gradientColors,
-
     openInput,
     inputTextStyle,
     keyboardType,
@@ -45,7 +44,7 @@ const AbstractButton = ({
                 width: width ?? 257,
                 ..._style
             }} >
-            {/* {
+            {
                 gradient &&
                 <LinearGradient
                     colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.1)', 'rgba(211, 170, 66, 0.1)', 'rgba(211, 170, 66, 0.1)', 'rgba(211, 170, 66, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0)']}
@@ -64,7 +63,7 @@ const AbstractButton = ({
                 >
                 </LinearGradient>
 
-            } */}
+            }
             <View style={{
                 width: '100%', height: '100%', justifyContent: 'center', position: 'absolute',
                 zIndex: 2

@@ -1,4 +1,4 @@
-export default{
+export default {
     SPLASH_SCREEN: 'SPLASH', // same as 2
     SIGNUP_SCENE_1: 'SIGNUP1',
     SELECTION_FIELD_SIGNUP: 'SELECTION_FIELD_SIGNUP',

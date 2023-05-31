@@ -2,20 +2,17 @@ import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Colors } from '../../styles'
 import SvgContainer from './svgContainer'
+import { SvgXml } from 'react-native-svg'
 
-const LabelItem = ({label, labelStyle, rightSvg, rightSvgSize}) => {
+const LabelItem = ({ label, labelStyle, rightSvg, rightSvgSize }) => {
   return (
-    <View style={{flexDirection: 'row',alignItems: 'center'}}>
+    <View style={{ display: "flex", flexDirection: 'row', alignItems: 'center' }}>
       {
         rightSvg &&
-          <SvgContainer
-            svg={rightSvg}
-            size={ rightSvgSize ?? labelStyle?.fontSize ?? styles.label?.fontSize ?? 12}
-            _style={{marginRight: 5 }}
-            // marginBottom: 3
-          />
+        <SvgXml xml={rightSvg} width={rightSvgSize} height={rightSvgSize} style={{ marginRight: 10 }}
+        />
       }
-      <Text style={{...styles.label, ...labelStyle}}>{label}</Text>
+      <Text style={{ ...styles.label, ...labelStyle }}>{label}</Text>
     </View>
   )
 }
@@ -23,8 +20,8 @@ const LabelItem = ({label, labelStyle, rightSvg, rightSvgSize}) => {
 export default LabelItem
 
 const styles = StyleSheet.create({
-    label: {
-        color: Colors.WHITE,
-        fontSize: 10,
-    }
+  label: {
+    color: Colors.WHITE,
+    fontSize: 10,
+  }
 })

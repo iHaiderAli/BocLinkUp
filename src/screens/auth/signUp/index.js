@@ -11,13 +11,17 @@ import { Colors, Layout, MyStyle, Typography } from "../../../styles";
 
 import AbstractButton from "../../../components/app/abstractButton";
 import { SVG_STRINGS } from "../../../../assets/svgStrings";
-import { PASSWORD, PATTERN, SCANNING } from "../../../styles/consts";
+import { PASSWORD, PATTERN, SCANNING, QUESTION_FIELDS } from "../../../styles/consts";
 import ScanningPassword from "./ScanningPassword";
 import PatternPassword from "./PatternPassword";
 import TextPassword from "./TextPassword";
 import BackgroundImageLayer from "./backgroundImageLayer";
 import MyBlurView from "../../../components/app/myBlurView";
 import MyKeyboardAvoidView from "../../../components/app/myKeyboardAvoidingView";
+import Routes from "../../../navigation/Routes";
+import { useAtom } from 'jotai'
+import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
+import SelectionFields from "./selectionFields";
 
 const SignUpSceneOne = ({ navigation, route }) => {
   const [userName, setUserName] = useState(false);
@@ -26,29 +30,42 @@ const SignUpSceneOne = ({ navigation, route }) => {
   const [gettingUserName, setGettingUserName] = useState("");
   const [gettingPhoneNumber, setGettingPhoneNumber] = useState(false);
   const [isBlurScreenActive, setIsBlurScreenActive] = useState(false);
-  const [isPasswordSet, setPassword] = useState(
-    route?.params?.password ? true : false
-  );
 
-  const [patternPasswordText, setPatternPasswordText] = useState(false);
-  const [scanPasswordText, setScanPasswordText] = useState(false);
-  const [textPasswordText, setTextPasswordText] = useState(false);
+  const [questions, setQuestions] = useState(false);
+
+  const [bocAtom, setBocAtom] = useAtom(BocApplicationAtom)
 
   useEffect(() => {
-    isBlurScreen()
+    validateAllData()
   })
 
   const handlePressIcons = (number) => {
-    // on selected password open screen
     if (number == 1) {
       setPasswordType(PATTERN);
+      setBocAtom((bocAtom) => ({
+        ...bocAtom,
+        patternPassword: ''
+      }))
     }
     if (number == 2) {
       setPasswordType(SCANNING);
+      setBocAtom((bocAtom) => ({
+        ...bocAtom,
+        scanningPassword: ''
+      }))
     }
     if (number == 3) {
       setPasswordType(PASSWORD);
+      setBocAtom((bocAtom) => ({
+        ...bocAtom,
+        textPassword: ''
+      }))
     }
+    if (number == 4) {
+      setPasswordType(QUESTION_FIELDS);
+    }
+
+    setIsBlurScreenActive(true)
   };
 
   const handlePhoneIconPress = () => {
@@ -58,49 +75,60 @@ const SignUpSceneOne = ({ navigation, route }) => {
   const phoneInputLeave = () => {
     if (phoneNumber == "") {
       setGettingPhoneNumber(false);
+    } else {
+      setBocAtom((bocAtom) => ({
+        ...bocAtom,
+        userPhone: phoneNumber
+      }))
     }
-    isBlurScreen();
+    validateAllData();
   };
 
   const userNameInputLeave = () => {
     if (userName == "") {
       setGettingUserName(false);
+    } else {
+      setBocAtom((bocAtom) => ({
+        ...bocAtom,
+        userName: userName,
+      }))
     }
-    isBlurScreen();
+    validateAllData();
   };
 
-  const isBlurScreen = () => {
-    // console.log("input ", userName)
-    // console.log("input ", phoneNumber)
-    // console.log("input ", patternPasswordText)
-    // console.log("input ", textPasswordText)
-    // console.log("input ", scanPasswordText)
-
-    if (userName != "" && phoneNumber != "" && patternPasswordText != "" && textPasswordText != "") {
-      setIsBlurScreenActive(false);
-
-      setTimeout(() => {
-        navigation && navigation.navigate(Routes.SELECTION_FIELD_SIGNUP)
-      }, 2000);
-
+  const validateAllData = () => {
+    // console.log("Data: ", bocAtom)
+    if (bocAtom.userName != "") {
+      setUserName(bocAtom.userName)
     }
+     if (bocAtom.userPhone != "") {
+      setPhoneNumber(bocAtom.userPhone)
+    }
+    if (bocAtom.userName != "" && bocAtom.userPhone != "" && bocAtom.patternPassword != "" && bocAtom.textPassword != "") {
 
+      if(questions == false) {
+        handlePressIcons(4)
+      } else {
+        validateAndRegisterUser()
+      }    
+      
+    }
   };
 
   const validateAndRegisterUser = () => {
-    if (!gettingUserName) {
+    // console.log("Success data 1", bocAtom)
+
+    if (bocAtom.userName == "") {
       Alert.alert("user Name is required");
-    } else if (!gettingPhoneNumber) {
+    } else if (bocAtom.userPhone == "") {
       Alert.alert("Phone number is required");
-    } else if (patternPasswordText == "") {
+    } else if (bocAtom.patternPassword == "") {
       Alert.alert("pattern is required");
-    } else if (scanPasswordText == "") {
-      Alert.alert("finger print scanning is required");
-    } else if (textPasswordText == "") {
+    } else if (bocAtom.textPassword == "") {
       Alert.alert("password is required");
     } else {
-      console.log("success");
-      // navigation.navigate(Routes.SELECTION_FIELD_SIGNUP)
+      console.log("Success data", bocAtom)
+      navigation.navigate(Routes.CONTACT_PROFILE_TAB)
     }
   };
 
@@ -116,14 +144,10 @@ const SignUpSceneOne = ({ navigation, route }) => {
         <MyKeyboardAvoidView widthScroll={true} extraHeight={0}>
           {passwordType == PATTERN && (
             <PatternPassword
-              backCall={(value) => {
+              backCall={() => {
                 setPasswordType(false);
                 setIsBlurScreenActive(false);
-                if (value != "") {
-                  console.log("PatternPassword " + value);
-                  setPatternPasswordText(value);
-                  isBlurScreen();
-                }
+                validateAllData();
               }}
               navigation={navigation}
             />
@@ -133,27 +157,31 @@ const SignUpSceneOne = ({ navigation, route }) => {
               backCall={(value) => {
                 setPasswordType(false);
                 setIsBlurScreenActive(false);
-                if (value != "") {
-                  console.log("ScanningPassword " + value);
-                  setScanPasswordText(value);
-                  isBlurScreen();
-                }
+                validateAllData();
               }}
               navigation={navigation}
             />
           )}
           {passwordType == PASSWORD && (
             <TextPassword
+              backCall={() => {
+                setPasswordType(false);
+                setIsBlurScreenActive(false);
+                validateAllData();
+              }}
+              navigation={navigation}
+            />
+          )}
+          {passwordType == QUESTION_FIELDS && (
+            <SelectionFields
               backCall={(value) => {
                 setPasswordType(false);
                 setIsBlurScreenActive(false);
                 if (value != "") {
-                  console.log("TextPassword " + value);
-                  setTextPasswordText(value);
-                  isBlurScreen();
+                  setQuestions(true)
+                  validateAndRegisterUser()
                 }
               }}
-              navigation={navigation}
             />
           )}
           <View style={{ flex: 2 }} />
@@ -224,7 +252,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
               setInputValue={(name) => {
                 setUserName(name);
               }}
-            // inputValue={userName}
+              inputValue={userName}
             // isdisabled={true}
             />
           </View>

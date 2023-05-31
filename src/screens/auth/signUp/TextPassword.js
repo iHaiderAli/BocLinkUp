@@ -1,15 +1,17 @@
 import { StyleSheet, Text, View } from "react-native";
 import React, { useState } from "react";
 import WrapPasswordTypes from "./wrapPasswordTypes";
-import LabelItem from "../../../components/app/labelItem";
 import AbstractInput from "../../../components/app/abstractInput";
 import { Colors, Layout, Typography } from "../../../styles";
 import { SVG_STRINGS } from "../../../../assets/svgStrings";
 import AbstractButton from "../../../components/app/abstractButton";
-import Routes from "../../../navigation/Routes";
+import { useAtom } from 'jotai'
+import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
 
 const TextPassword = ({ backCall, navigation }) => {
   const [password, setPassword] = useState("");
+  const [bocAtom, setBocAtom] = useAtom(BocApplicationAtom)
+
   return (
     <WrapPasswordTypes
       backCall={backCall}
@@ -48,7 +50,11 @@ const TextPassword = ({ backCall, navigation }) => {
           outerSvg={SVG_STRINGS.gradientConfirm()}
           outerHeight={40}
           onPressButton={() => {
-            backCall && backCall(password);
+            setBocAtom((bocAtom) => ({
+              ...bocAtom,
+              textPassword: password
+            }))
+            backCall && backCall();
           }}
         />
       </View>

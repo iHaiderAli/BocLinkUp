@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
   Platform,
 } from "react-native";
 // import { PatternLock } from "@shanshang/react-native-pattern-lock";
@@ -13,17 +12,18 @@ import { SVG_STRINGS } from "../../../../assets/svgStrings";
 import { Colors, Layout, Typography } from "../../../styles";
 import PasswordGesture from "react-native-gesture-password";
 import AbstractButton from "../../../components/app/abstractButton";
-import { NavigationContainer } from "@react-navigation/native";
-import Routes from "../../../navigation/Routes";
-// import PropTypes from 'prop-types';
+import { useAtom } from 'jotai'
+import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
 
-const PatternPassword = ({ backCall, _styles, navigation }) => {
+const PatternPassword = ({ backCall }) => {
 
   const [patternStatus, setPatternStatus] = useState("normal");
   const [patternValue, setPatternValue] = useState("");
   const [confirmPatternValue, setConfirmPatternValue] = useState(false);
   const [showConfirmButton, setShowConfirmButton] = useState(false);
   const patternRef = useRef(null);
+
+  const [bocAtom, setBocAtom] = useAtom(BocApplicationAtom)
 
   return (
     <WrapPasswordTypes
@@ -43,7 +43,7 @@ const PatternPassword = ({ backCall, _styles, navigation }) => {
           left: 0,
           width: "100%",
           zIndex: 3,
-          // alignItems: 'center',
+          alignItems: 'center',
           justifyContent: "center",
           // backgroundColor: 'red'
         }}
@@ -58,7 +58,7 @@ const PatternPassword = ({ backCall, _styles, navigation }) => {
             margin: 0,
           }}
           onPressIcon={() => {
-            navigation.navigate(Routes.SIGNUP_SCENE_1);
+            backCall && backCall();
           }}
           height={40}
           _style={{
@@ -69,7 +69,7 @@ const PatternPassword = ({ backCall, _styles, navigation }) => {
           rightSvg={SVG_STRINGS.backIcon()}
           rightSvgSize={18}
           onPressButton={() => {
-            backCall && backCall("");
+            backCall && backCall();
           }}
         />
       </View>
@@ -166,7 +166,7 @@ const PatternPassword = ({ backCall, _styles, navigation }) => {
               } else if (confirmPatternValue && val == patternValue) {
                 // console.log("pattern matched", val);
                 setPatternStatus("right");
-                backCall && backCall(val);
+                setPatternValue(val);
                 setShowConfirmButton(true);
               } else if (confirmPatternValue && val != patternValue) {
                 // console.log("wrong matched", val);
@@ -201,9 +201,11 @@ const PatternPassword = ({ backCall, _styles, navigation }) => {
                 outerSvg={SVG_STRINGS.gradientConfirm()}
                 outerHeight={40}
                 onPressButton={() => {
+                  setBocAtom((bocAtom) => ({
+                    ...bocAtom,
+                    patternPassword: patternValue
+                  }))
                   backCall && backCall();
-                  navigation &&
-                    navigation.navigate(Routes.SELECTION_FIELD_SIGNUP);
                 }}
               />
             </View>
