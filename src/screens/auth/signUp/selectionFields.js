@@ -1,15 +1,10 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
 import React, { useState, useRef } from 'react'
-import BackgroundImageLayer from './backgroundImageLayer'
 import WrapPasswordTypes from './wrapPasswordTypes'
-import { Colors, Layout, MyStyle, Typography } from '../../../styles'
-import MyBlurView from '../../../components/app/myBlurView'
-import SvgContainer from '../../../components/app/svgContainer'
+import { Colors, Layout, Typography } from '../../../styles'
 import { SVG_STRINGS } from '../../../../assets/svgStrings'
-import { TextInput } from 'react-native-gesture-handler'
 import AbstractInput from '../../../components/app/abstractInput'
 import AbstractButton from '../../../components/app/abstractButton'
-import Routes from '../../../navigation/Routes'
 
 import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
@@ -70,7 +65,7 @@ const SelectionFields = ({ backCall }) => {
 
     const handleConfirmVisible = () => {
         let filledFields = fields.filter(ls => ls.value !== '').map(ls => ls)
-        if (filledFields?.length >= 3) {
+        if (filledFields?.length === 3) {
             setShowConfirmButton(true)
         } else {
             setShowConfirmButton(false)
@@ -121,7 +116,7 @@ const SelectionFields = ({ backCall }) => {
 
                     {/* title slection field count  */}
                     {
-                        showConfirmButton &&
+                        showConfirmButton && showConfirmButton === true &&
                         <AbstractButton
                             label={"CONFIRM"}
                             _style={{
@@ -180,6 +175,7 @@ const SelectionFields = ({ backCall }) => {
                 </View>
                 {/* List the Selections  */}
                 <FlatList
+                    removeClippedSubviews={false}
                     // numColumns={1}
                     style={{ flex: 1 }}
                     contentContainerStyle={{
@@ -211,17 +207,16 @@ const SelectionFields = ({ backCall }) => {
                                     height={40}
                                     width={'100%'}
                                     autoFocus
-                                    // _style={styles.fillValueStyle}
                                     selectionColor={Colors.WHITE}
                                     _styleText={styles.fillValueStyle}
                                     textChanged={(txt) => {
                                         let nFields = fields;
                                         nFields[index].value = txt;
                                         setFields([...nFields])
-                                        timerRef.current && clearTimeout(timerRef.current)
-                                        timerRef.current = setTimeout(() => {
-                                            handleConfirmVisible();
-                                        }, 1500)
+                                        // timerRef.current && clearTimeout(timerRef.current)
+                                        // timerRef.current = setTimeout(() => {
+                                        handleConfirmVisible();
+                                        // }, 1500)
                                     }}
                                     onBlur={() => {
                                         handleConfirmVisible();
