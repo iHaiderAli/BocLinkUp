@@ -21,7 +21,7 @@ import MyKeyboardAvoidView from "../../../components/app/myKeyboardAvoidingView"
 import Routes from "../../../navigation/Routes";
 import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
-import SelectionFields from "./selectionFields";
+import SelectionFields from "./SelectionFields";
 
 const SignUpSceneOne = ({ navigation, route }) => {
   const [userName, setUserName] = useState(false);
@@ -51,7 +51,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
       setPasswordType(SCANNING);
       setBocAtom((bocAtom) => ({
         ...bocAtom,
-        scanningPassword: ''
+        scanningPassword: false
       }))
     }
     if (number == 3) {
@@ -101,31 +101,35 @@ const SignUpSceneOne = ({ navigation, route }) => {
     if (bocAtom.userName != "") {
       setUserName(bocAtom.userName)
     }
-     if (bocAtom.userPhone != "") {
+    if (bocAtom.userPhone != "") {
       setPhoneNumber(bocAtom.userPhone)
     }
-    if (bocAtom.userName != "" && bocAtom.userPhone != "" && bocAtom.patternPassword != "" && bocAtom.textPassword != "") {
+    if (bocAtom.userName != "" 
+    && bocAtom.userPhone != "" 
+    && bocAtom.patternPassword != "" 
+    && bocAtom.scanningPassword == true
+    && bocAtom.textPassword != "") {
 
-      if(questions == false) {
+      if (questions == false) {
         handlePressIcons(4)
       } else {
         validateAndRegisterUser()
-      }    
-      
+      }
+
     }
   };
 
   const validateAndRegisterUser = () => {
-    // console.log("Success data 1", bocAtom)
-
     if (bocAtom.userName == "") {
       Alert.alert("user Name is required");
     } else if (bocAtom.userPhone == "") {
       Alert.alert("Phone number is required");
     } else if (bocAtom.patternPassword == "") {
-      Alert.alert("pattern is required");
+      Alert.alert("pattern pattern is required");
+    } else if (bocAtom.scanningPassword == false) {
+      Alert.alert("scan is required");
     } else if (bocAtom.textPassword == "") {
-      Alert.alert("password is required");
+      Alert.alert("text password is required");
     } else {
       console.log("Success data", bocAtom)
       navigation.navigate(Routes.CONTACT_PROFILE_TAB)
@@ -263,5 +267,3 @@ const SignUpSceneOne = ({ navigation, route }) => {
 };
 
 export default SignUpSceneOne;
-
-const styles = StyleSheet.create({});

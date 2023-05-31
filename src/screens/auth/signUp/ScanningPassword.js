@@ -6,83 +6,49 @@ import SvgContainer from "../../../components/app/svgContainer";
 import { SVG_STRINGS } from "../../../../assets/svgStrings";
 import AbstractButton from "../../../components/app/abstractButton";
 import WrapPasswordTypes from "./wrapPasswordTypes";
-import Routes from "../../../navigation/Routes";
-import ReactNativeBiometrics, { BiometryTypes } from 'react-native-biometrics'
 import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
+import * as LocalAuthentication from 'expo-local-authentication';
 
 const ScanningPassword = ({ backCall, navigation }) => {
   const [scanned, setScanned] = useState(false);
-  const rnBiometrics = new ReactNativeBiometrics()
   const [bocAtom, setBocAtom] = useAtom(BocApplicationAtom)
 
-  useEffect(async () => {
-    const { biometryType } = await rnBiometrics.isSensorAvailable()
-    rnBiometrics.isSensorAvailable()
-      .then((resultObject) => {
-        const { available, biometryType } = resultObject
-
-        if (available && biometryType === BiometryTypes.TouchID) {
-          console.log('TouchID is supported')
-        } else if (available && biometryType === BiometryTypes.FaceID) {
-          console.log('FaceID is supported')
-        } else if (available && biometryType === BiometryTypes.Biometrics) {
-          rnBiometrics.createKeys()
-            .then((resultObject) => {
-              const { publicKey } = resultObject
-              console.log(publicKey)
-            })
-        } else {
-          console.log('Biometrics not supported')
-        }
-      })
-
-    rnBiometrics.biometricKeysExist()
-      .then((resultObject) => {
-        const { keysExist } = resultObject
-
-        if (keysExist) {
-          rnBiometrics.simplePrompt({ promptMessage: 'Confirm fingerprint' })
-            .then((resultObject) => {
-              // console.log("Testing", resultObject)
-              const { success } = resultObject
-
-              if (success) {
-                console.log('successful biometrics provided')
-                setScanned(true);
-                setBocAtom((bocAtom) => ({
-                  ...bocAtom,
-                  scanningPassword: resultObject
-                }))
-              } else {
-                console.log('user cancelled biometric prompt')
-              }
-            })
-            .catch(() => {
-              console.log('biometrics failed')
-            })
-        } else {
-          console.log('Keys do not exist or were deleted')
-        }
-      })
-
-    // rnBiometrics.biometricKeysExist()
-    // .then((resultObject) => {
-    //   const { keysExist } = resultObject
-
-    //   if (keysExist) {
-    //     console.log('Keys exist')
-    //   } else {
-    //     console.log('Keys do not exist or were deleted')
-    //   }
-    // })
-    // alert('ok')
-    //   first
-
-    return () => {
-      // second/
-    };
+  useEffect(() => {
+    checkDevicePossibilities();
   }, []);
+
+  checkDevicePossibilities = async () => {
+    const hasHardware = await LocalAuthentication.hasHardwareAsync();
+    const isEnrolled = await LocalAuthentication.isEnrolledAsync();
+
+    if (hasHardware) {
+      try {
+        if(isEnrolled) {
+          const result = await LocalAuthentication.authenticateAsync({
+            promptMessage: 'This message only shows up on iOS',
+            fallbackLabel: '',
+          });
+          if (result.success) {
+            setScanned(true)
+            setBocAtom((bocAtom) => ({
+              ...bocAtom,
+              scanningPassword: true
+            }))
+          } else {
+            alert('Failed to authenticate, reason: ' + result.error);
+          }
+        } else {
+          alert("Authentication not found")
+        }
+      } finally {
+        
+      } 
+    } else {
+      alert("Scanning hardware does not support")
+    }
+
+  }
 
   return (
     <WrapPasswordTypes

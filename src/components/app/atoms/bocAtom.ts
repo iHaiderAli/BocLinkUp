@@ -2,7 +2,7 @@ import { atom } from 'jotai'
 
 export const BocApplicationAtom = atom({
   patternPassword: '',
-  scanningPassword:'',
+  scanningPassword: false,
   textPassword:'',
   userName:'',
   userPhone:'',
