@@ -37,6 +37,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
   useEffect(() => {
     isBlurScreen()
   })
+
   const handlePressIcons = (number) => {
     // on selected password open screen
     if (number == 1) {
@@ -75,16 +76,15 @@ const SignUpSceneOne = ({ navigation, route }) => {
     // console.log("input ", textPasswordText)
     // console.log("input ", scanPasswordText)
 
-    // if (userName != "" && phoneNumber != "" && patternPasswordText != "" && textPasswordText != "") {
-    //   setIsBlurScreenActive(false);
+    if (userName != "" && phoneNumber != "" && patternPasswordText != "" && textPasswordText != "") {
+      setIsBlurScreenActive(false);
 
-    //   setTimeout(() => {
-    //     navigation && navigation.navigate(Routes.SELECTION_FIELD_SIGNUP)
-    //   }, 2000);
+      setTimeout(() => {
+        navigation && navigation.navigate(Routes.SELECTION_FIELD_SIGNUP)
+      }, 2000);
 
-    // } else {
-    //   setIsBlurScreenActive(true);
-    // }
+    }
+
   };
 
   const validateAndRegisterUser = () => {
@@ -118,6 +118,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
             <PatternPassword
               backCall={(value) => {
                 setPasswordType(false);
+                setIsBlurScreenActive(false);
                 if (value != "") {
                   console.log("PatternPassword " + value);
                   setPatternPasswordText(value);
@@ -131,6 +132,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
             <ScanningPassword
               backCall={(value) => {
                 setPasswordType(false);
+                setIsBlurScreenActive(false);
                 if (value != "") {
                   console.log("ScanningPassword " + value);
                   setScanPasswordText(value);
@@ -144,6 +146,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
             <TextPassword
               backCall={(value) => {
                 setPasswordType(false);
+                setIsBlurScreenActive(false);
                 if (value != "") {
                   console.log("TextPassword " + value);
                   setTextPasswordText(value);
@@ -154,7 +157,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
             />
           )}
           <View style={{ flex: 2 }} />
-          <View style={{ flex: 1.2, alignItems: "center" }}>
+          <View style={{ flex: 1.2, alignItems: "center", opacity: isBlurScreenActive ? 0.3 : 1 }}>
             <AbstractButton
               label={"TAP TO ENTER MOBILE NUMBER"}
               icons={[SVG_STRINGS.phoneIcon()]}
@@ -221,14 +224,13 @@ const SignUpSceneOne = ({ navigation, route }) => {
               setInputValue={(name) => {
                 setUserName(name);
               }}
-              // inputValue={userName}
-              // isdisabled={true}
+            // inputValue={userName}
+            // isdisabled={true}
             />
           </View>
-          {passwordType && <MyBlurView />}
         </MyKeyboardAvoidView>
       </BackgroundImageLayer>
-    </View>
+    </View >
   );
 };
 

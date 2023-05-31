@@ -18,11 +18,13 @@ import Routes from "../../../navigation/Routes";
 // import PropTypes from 'prop-types';
 
 const PatternPassword = ({ backCall, _styles, navigation }) => {
+
   const [patternStatus, setPatternStatus] = useState("normal");
   const [patternValue, setPatternValue] = useState("");
   const [confirmPatternValue, setConfirmPatternValue] = useState(false);
   const [showConfirmButton, setShowConfirmButton] = useState(false);
   const patternRef = useRef(null);
+
   return (
     <WrapPasswordTypes
       backCall={backCall}

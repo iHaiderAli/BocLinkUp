@@ -6,7 +6,7 @@ import LinearGradient from 'react-native-linear-gradient'
 import AbstractInput from './abstractInput'
 
 const AbstractButton = ({
-    height, 
+    height,
     width,
     label,
     labelStyle,
@@ -37,49 +37,50 @@ const AbstractButton = ({
     const handlePressButton = () => {
         onPressButton && onPressButton()
     }
-  return (
-    <TouchableOpacity 
-        disabled={isdisabled}
-    onPress={handlePressButton} style={{
-        height: height ?? 99,
-        width: width ?? 257, 
-        ..._style
-    }} >
-        {
-            gradient &&
-            <LinearGradient
+    return (
+        <TouchableOpacity
+            disabled={isdisabled}
+            onPress={handlePressButton} style={{
+                height: height ?? 99,
+                width: width ?? 257,
+                ..._style
+            }} >
+            {/* {
+                gradient &&
+                <LinearGradient
+                    colors={['rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.1)', 'rgba(211, 170, 66, 0.1)', 'rgba(211, 170, 66, 0.1)', 'rgba(211, 170, 66, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0)']}
+                    angle={90}
+                    useAngle={true}
+                    start={{ x: 0, y: 0 }}
+                    // locations={[0, 0]}
+                    end={{ x: 1, y: 1 }}
+                    style={{
+                        alignItems: 'center',
+                        width: '100%',
+                        height: '100%',
+                        position: 'absolute',
+                        zIndex: 1
+                    }}
+                >
+                </LinearGradient>
 
-                        colors={[ 'rgba(0, 0, 0, 0)', 'rgba(0, 0, 0, 0.1)', 'rgba(211, 170, 66, 0.1)', 'rgba(211, 170, 66, 0.1)', 'rgba(211, 170, 66, 0.1)', 'rgba(0, 0, 0, 0.1)', 'rgba(0, 0, 0, 0)']} 
-                        angle={90}
-                        useAngle={true}
-                        start={{ x:  0, y: 0 }}
-                        // locations={[0, 0]}
-                        end={{ x: 1, y: 1 }}
-                        style={{
-                            alignItems:'center',
-                            width: '100%',
-                            height: '100%',
-                            position: 'absolute',
-                            zIndex: 1
-                        }}
-            >
-            </LinearGradient>
-
-        }
-        <View style={{width: '100%', height:'100%', justifyContent :'center', position: 'absolute',
-                zIndex: 2}}>
-                <SvgContainer
+            } */}
+            <View style={{
+                width: '100%', height: '100%', justifyContent: 'center', position: 'absolute',
+                zIndex: 2
+            }}>
+                {outerSvg && <SvgContainer
                     svg={outerSvg}
                     // size={250}
-                    height={ outerHeight ?? 100}
-                    width={ outerWidth ?? 300}
-                    _style={{alignSelf: 'center'}}
-                />
-                <View style={{position: 'absolute', zIndex: 2, alignItems: 'center', alignSelf: 'center', justifyContent :'center'}} >
+                    height={outerHeight ?? 100}
+                    width={outerWidth ?? 300}
+                    _style={{ alignSelf: 'center' }}
+                />}
+                <View style={{ position: 'absolute', zIndex: 2, alignItems: 'center', alignSelf: 'center', justifyContent: 'center' }} >
                     {
                         openInput == true &&
                         <AbstractInput
-                            _styleText={{...inputTextStyle}}
+                            _styleText={{ ...inputTextStyle }}
                             keyboardType={keyboardType}
                             selectionColor={selectionColor}
                             onBlur={onBlurInput}
@@ -94,37 +95,37 @@ const AbstractButton = ({
                     {
                         !openInput == true &&
                         <>
-                            {   icons &&
+                            {icons &&
                                 <>
-                                <View style={{flexDirection: 'row'}}>
-                                    {
-                                        icons?.map( (ls, index) =>
-                                        <TouchableOpacity key={`key_btn_${index}`} onPress={() => onPressIcon(index+1)}>
-                                            <SvgContainer
-                                                svg={ls}
-                                                size={iconSize ?? 14.5}
-                                                _style={{paddingHorizontal: iconPaddingHorizontal ?? 20}}
-                                            />
-                                        </TouchableOpacity>
-                                        )
-                                    }
-                                </View>
-                                <View style={{height: 10}} />
+                                    <View style={{ flexDirection: 'row' }}>
+                                        {
+                                            icons?.map((ls, index) =>
+                                                <TouchableOpacity key={`key_btn_${index}`} onPress={() => onPressIcon(index + 1)}>
+                                                    <SvgContainer
+                                                        svg={ls}
+                                                        size={iconSize ?? 14.5}
+                                                        _style={{ paddingHorizontal: iconPaddingHorizontal ?? 20 }}
+                                                    />
+                                                </TouchableOpacity>
+                                            )
+                                        }
+                                    </View>
+                                    <View style={{ height: 10 }} />
                                 </>
                             }
                             {
-                                label && 
-                                <LabelItem rightSvgSize={rightSvgSize} rightSvg={rightSvg} label={label} labelStyle={{...labelStyle}} />
+                                label &&
+                                <LabelItem rightSvgSize={rightSvgSize} rightSvg={rightSvg} label={label} labelStyle={{ ...labelStyle }} />
                             }
                         </>
                     }
                 </View>
 
-        </View>
-   
-        
-    </TouchableOpacity>
-  )
+            </View>
+
+
+        </TouchableOpacity>
+    )
 }
 
 export default AbstractButton

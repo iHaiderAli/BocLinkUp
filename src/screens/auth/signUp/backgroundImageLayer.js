@@ -4,7 +4,7 @@ import React from "react";
 const BackgroundImageLayer = ({ children, isBlur }) => {
   return (
     <ImageBackground
-      source={require("../../../../assets/images/signup_bg.png")}
+      source={require("../../../../assets/images/signupbackImage.png")}
       imageStyle={{
         flex: 1,
         // resizeMode: 'stretch'
@@ -13,7 +13,7 @@ const BackgroundImageLayer = ({ children, isBlur }) => {
         height: "100%",
         width: "100%",
       }}
-      blurRadius={isBlur ? 2.5 : 0}
+      blurRadius={isBlur ? 5 : 0}
     >
       {children}
     </ImageBackground>

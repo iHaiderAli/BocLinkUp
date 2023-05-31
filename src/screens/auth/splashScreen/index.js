@@ -18,7 +18,6 @@ const SplashScreen = ({ navigation }) => {
 
   const onLayoutRootView = useCallback(async () => {
     if (loaded) {
-      console.log("testing")
       setTimeout(() => {
         navigation.navigate(Routes.SIGNUP_SCENE_1)
       }, 2000);
