@@ -132,7 +132,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
       Alert.alert("text password is required");
     } else {
       console.log("Success data", bocAtom)
-      navigation.navigate(Routes.CONTACT_PROFILE_TAB)
+      navigation.navigate(Routes.USER_VIBE)
     }
   };
 

@@ -19,6 +19,7 @@ import SecurityScreen from "../screens/main/securityScreen";
 import ProfileSetting from "../screens/main/profileSetting";
 import AccountDelete from "../screens/main/accountDelete";
 import ProfileTabs from "../screens/main/profileTabs";
+import UserVibe from "../screens/main/userVibe";
 
 const Stack = createStackNavigator();
 
@@ -152,6 +153,14 @@ const Navigator = () => {
           <Stack.Screen
             name={Routes.USER_PROFILE_TAB}
             component={ProfileTabs}
+            options={({ route }) => ({
+              headerShown: false,
+            })}
+          />
+
+          <Stack.Screen
+            name={Routes.USER_VIBE}
+            component={UserVibe}
             options={({ route }) => ({
               headerShown: false,
             })}
