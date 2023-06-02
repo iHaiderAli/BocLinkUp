@@ -1,20 +1,16 @@
 import { StyleSheet, Text, View, FlatList, TouchableOpacity } from 'react-native'
-import React, { useState, useRef } from 'react'
+import React, { useState } from 'react'
 import WrapPasswordTypes from './wrapPasswordTypes'
 import { Colors, Layout, Typography } from '../../../styles'
 import { SVG_STRINGS } from '../../../../assets/svgStrings'
 import AbstractInput from '../../../components/app/abstractInput'
 import AbstractButton from '../../../components/app/abstractButton'
-
 import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
-import axios from 'axios'
-import { API_URL } from '../../../common/constants'
 
 const SelectionFields = ({ backCall }) => {
     const [showConfirmButton, setShowConfirmButton] = useState(false);
     const [editingItem, setEditingItem] = useState(false);
-    const timerRef = useRef(null);
     const [bocAtom, setBocAtom] = useAtom(BocApplicationAtom)
 
     const [fields, setFields] = useState([
@@ -138,22 +134,6 @@ const SelectionFields = ({ backCall }) => {
                             }}
                             outerSvg={SVG_STRINGS.gradientConfirm()}
                             onPressButton={() => {
-                                // axios.post(`${API_URL}/registration/register`, {
-                                //     name: bocAtom.userName,
-                                //     phone: bocAtom.userPhone,
-                                //     passwordType: "Numeric",
-                                //     numericPassword: bocAtom.textPassword,
-                                //     patternPassword: bocAtom.patternPassword
-                                // }).then((res) => {
-                                //     //will save jwt token later
-                                //     navigation.navigate(Routes.CONTACT_PROFILE_TAB);
-                                // }).catch((err) => {
-                                //     if (err.response.data.error.message) {
-                                //         alert(err.response.data.error.message)
-                                //     } else {
-                                //         alert("Error in signing in user")
-                                //     }
-                                // })
                                 saveQuestionsInformation()
                             }}
                             selectionColor={Colors.TEXT_COLOR_3}
@@ -201,7 +181,7 @@ const SelectionFields = ({ backCall }) => {
                         alignItems: 'center'
                     }}
                     data={fields}
-                    keyExtractor={(item, index) => `key_features_${index}`}
+                    keyExtractor={(item, index) => `key_${index}`}
                     renderItem={({ item, index }) =>
                         <TouchableOpacity style={{
                             height: 50,
@@ -231,10 +211,7 @@ const SelectionFields = ({ backCall }) => {
                                         let nFields = fields;
                                         nFields[index].value = txt;
                                         setFields([...nFields])
-                                        // timerRef.current && clearTimeout(timerRef.current)
-                                        // timerRef.current = setTimeout(() => {
                                         handleConfirmVisible();
-                                        // }, 1500)
                                     }}
                                     onBlur={() => {
                                         handleConfirmVisible();

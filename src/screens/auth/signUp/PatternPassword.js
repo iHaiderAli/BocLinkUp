@@ -15,7 +15,7 @@ import AbstractButton from "../../../components/app/abstractButton";
 import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
 
-const PatternPassword = ({ backCall }) => {
+const PatternPassword = ({ isLoginScreen, backCall }) => {
 
   const [patternStatus, setPatternStatus] = useState("normal");
   const [patternValue, setPatternValue] = useState("");
@@ -118,7 +118,7 @@ const PatternPassword = ({ backCall }) => {
                   // shadowOpacity: 0.6,
                 }}
               >
-                {patternValue ? "SET AGAIN" : "SET PATTERN"}{" "}
+                {isLoginScreen ? "Enter Pattern" : patternValue ? "SET AGAIN" : "SET PATTERN"}
               </Text>
             </View>
             <View
@@ -158,20 +158,26 @@ const PatternPassword = ({ backCall }) => {
             normalColor={"#4DFFFF"}
             ref={patternRef}
             onEnd={(val) => {
-              if (!confirmPatternValue) {
-                // console.log("1st try", val);
+              if (isLoginScreen) {
                 setPatternValue(val);
-                setConfirmPatternValue(true);
-                setPatternStatus("right");
-              } else if (confirmPatternValue && val == patternValue) {
-                // console.log("pattern matched", val);
-                setPatternStatus("right");
-                setPatternValue(val);
-                setShowConfirmButton(true);
-              } else if (confirmPatternValue && val != patternValue) {
-                // console.log("wrong matched", val);
-                setPatternStatus("wrong");
+                setShowConfirmButton(true)
+              } else {
+                if (!confirmPatternValue) {
+                  // console.log("1st try", val);
+                  setPatternValue(val);
+                  setConfirmPatternValue(true);
+                  setPatternStatus("right");
+                } else if (confirmPatternValue && val == patternValue) {
+                  // console.log("pattern matched", val);
+                  setPatternStatus("right");
+                  setPatternValue(val);
+                  setShowConfirmButton(true);
+                } else if (confirmPatternValue && val != patternValue) {
+                  // console.log("wrong matched", val);
+                  setPatternStatus("wrong");
+                }
               }
+
             }}
           />
 
@@ -205,7 +211,7 @@ const PatternPassword = ({ backCall }) => {
                     ...bocAtom,
                     patternPassword: patternValue
                   }))
-                  backCall && backCall();
+                  backCall && backCall(patternValue);
                 }}
               />
             </View>

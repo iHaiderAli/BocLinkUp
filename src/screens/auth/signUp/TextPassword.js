@@ -8,7 +8,7 @@ import AbstractButton from "../../../components/app/abstractButton";
 import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
 
-const TextPassword = ({ backCall, navigation }) => {
+const TextPassword = ({ isLoginScreen, backCall }) => {
   const [password, setPassword] = useState("");
   const [bocAtom, setBocAtom] = useAtom(BocApplicationAtom)
 

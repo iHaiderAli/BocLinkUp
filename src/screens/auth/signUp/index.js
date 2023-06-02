@@ -5,6 +5,7 @@ import {
   ImageBackground,
   StatusBar,
   Alert,
+  TouchableOpacity,
 } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
 import { Colors, Layout, MyStyle, Typography } from "../../../styles";
@@ -16,30 +17,56 @@ import ScanningPassword from "./ScanningPassword";
 import PatternPassword from "./PatternPassword";
 import TextPassword from "./TextPassword";
 import BackgroundImageLayer from "./backgroundImageLayer";
-import MyBlurView from "../../../components/app/myBlurView";
 import MyKeyboardAvoidView from "../../../components/app/myKeyboardAvoidingView";
-import Routes from "../../../navigation/Routes";
 import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
 import SelectionFields from "./selectionFields";
 import axios from 'axios';
 import { API_URL } from "../../../common/constants";
+import Routes from "../../../navigation/Routes";
 
 const SignUpSceneOne = ({ navigation, route }) => {
+  const [isLoginScreen, setIsLoginScreen] = useState(true);
   const [userName, setUserName] = useState(false);
   const [passwordType, setPasswordType] = useState(false);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [gettingUserName, setGettingUserName] = useState("");
   const [gettingPhoneNumber, setGettingPhoneNumber] = useState(false);
   const [isBlurScreenActive, setIsBlurScreenActive] = useState(false);
-
   const [questions, setQuestions] = useState(false);
-
   const [bocAtom, setBocAtom] = useAtom(BocApplicationAtom)
 
   useEffect(() => {
-    validateAllData()
-  })
+    if (bocAtom.phone != "" &&
+      bocAtom.userName != "" &&
+      bocAtom.patternPassword != "" &&
+      bocAtom.scanningPassword == true &&
+      bocAtom.textPassword != "" && !questions) {
+      handlePressIcons(4)
+    }
+  }, [bocAtom])
+
+  const phoneInputLeave = () => {
+    if (phoneNumber == "") {
+      setGettingPhoneNumber(false);
+    } else {
+      setBocAtom((bocAtom) => ({
+        ...bocAtom,
+        userPhone: phoneNumber
+      }))
+    }
+  };
+
+  const userNameInputLeave = () => {
+    if (userName == "") {
+      setGettingUserName(false);
+    } else {
+      setBocAtom((bocAtom) => ({
+        ...bocAtom,
+        userName: userName,
+      }))
+    }
+  };
 
   const handlePressIcons = (number) => {
     if (number == 1) {
@@ -70,68 +97,51 @@ const SignUpSceneOne = ({ navigation, route }) => {
     setIsBlurScreenActive(true)
   };
 
-  const handlePhoneIconPress = () => {
-    setGettingPhoneNumber(true);
-  };
-
-  const phoneInputLeave = () => {
-    if (phoneNumber == "") {
-      setGettingPhoneNumber(false);
-    } else {
-      setBocAtom((bocAtom) => ({
-        ...bocAtom,
-        userPhone: phoneNumber
-      }))
-    }
-    validateAllData();
-  };
-
-  const userNameInputLeave = () => {
-    if (userName == "") {
-      setGettingUserName(false);
-    } else {
-      setBocAtom((bocAtom) => ({
-        ...bocAtom,
-        userName: userName,
-      }))
-    }
-    validateAllData();
-  };
-
-  const validateAllData = () => {
-    // console.log("Data: ", bocAtom)
-    if (bocAtom.userName != "") {
-      setUserName(bocAtom.userName)
-    }
-    if (bocAtom.userPhone != "") {
-      setPhoneNumber(bocAtom.userPhone)
-    }
-    if (bocAtom.userName != ""
-      && bocAtom.userPhone != ""
-      && bocAtom.patternPassword != ""
-      && bocAtom.scanningPassword == true
-      && bocAtom.textPassword != "") {
-
-      if (questions == false) {
-        handlePressIcons(4)
-      } else {
-        validateAndRegisterUser()
-      }
-
-    }
-  };
-
   const validateAndRegisterUser = () => {
-    if (bocAtom.userName == "") {
-      Alert.alert("user Name is required");
-    } else if (bocAtom.userPhone == "") {
+    console.log("Signup API", bocAtom)
+    if (bocAtom.userPhone == "") {
       Alert.alert("Phone number is required");
+    } else if (bocAtom.userName == "") {
+      Alert.alert("user Name is required");
     } else if (bocAtom.patternPassword == "") {
       Alert.alert("pattern pattern is required");
     } else if (bocAtom.scanningPassword == false) {
-      Alert.alert("scan is required");
+      Alert.alert("Finger print is required");
     } else if (bocAtom.textPassword == "") {
       Alert.alert("text password is required");
+    } else if (questions == false) {
+      handlePressIcons(4)
+    } else {
+      console.log("Signup API Calling")
+      // axios.post(`${API_URL}/registration/register`, {
+      //   name: bocAtom.userName,
+      //   phone: bocAtom.userPhone,
+      //   passwordType: "Numeric",
+      //   numericPassword: bocAtom.textPassword,
+      //   patternPassword: bocAtom.patternPassword
+      // }).then((res) => {
+      //   //will save jwt token later
+      //   console.log("testing", res)
+      //   navigation.navigate(Routes.USER_VIBE)
+      // }).catch((err) => {
+      //   if (err.response.data.error.message) {
+      //     alert(err.response.data.error.message)
+      //   } else {
+      //     alert("Error in signing up user")
+      //   }
+      // })
+    }
+  };
+
+  const validateLoginDataAndApi = () => {
+    if (bocAtom.userPhone == "") {
+      Alert.alert("Phone number is required");
+    } else if (bocAtom.patternPassword == "" && bocAtom.scanningPassword == false && bocAtom.textPassword == "") {
+      Alert.alert("Please enter any password");
+    } else {
+      console.log("Login API call", bocAtom)
+
+      //Login API call 
     }
   };
 
@@ -147,20 +157,19 @@ const SignUpSceneOne = ({ navigation, route }) => {
         <MyKeyboardAvoidView widthScroll={true} extraHeight={0}>
           {passwordType == PATTERN && (
             <PatternPassword
+              isLoginScreen={isLoginScreen}
               backCall={() => {
                 setPasswordType(false);
                 setIsBlurScreenActive(false);
-                validateAllData();
               }}
               navigation={navigation}
             />
           )}
           {passwordType == SCANNING && (
             <ScanningPassword
-              backCall={(value) => {
+              backCall={() => {
                 setPasswordType(false);
                 setIsBlurScreenActive(false);
-                validateAllData();
               }}
               navigation={navigation}
             />
@@ -170,7 +179,6 @@ const SignUpSceneOne = ({ navigation, route }) => {
               backCall={() => {
                 setPasswordType(false);
                 setIsBlurScreenActive(false);
-                validateAllData();
               }}
               navigation={navigation}
             />
@@ -182,18 +190,39 @@ const SignUpSceneOne = ({ navigation, route }) => {
                 setIsBlurScreenActive(false);
                 if (value != "") {
                   setQuestions(true)
-                  validateAndRegisterUser()
                 }
               }}
             />
           )}
-          <View style={{ flex: 2 }} />
+          <View style={{ flex: 1.8 }}>
+            <TouchableOpacity
+              onPress={() => {
+                if (isLoginScreen) {
+                  validateLoginDataAndApi()
+                } else {
+                  validateAndRegisterUser();
+                }
+              }}
+              style={{ height: 100, width: 100, marginTop: 150, marginLeft: 20, display: "flex", alignItems: "center", justifyContent: "center" }} >
+              <Text
+                style={{
+                  fontFamily: Typography.CALIBRI_REGULAR,
+                  fontSize: 12,
+                  textAlignVertical: "center",
+                  alignSelf: "flex-start",
+                  color: "#BEB578",
+                }}
+              >
+                {"Tap to Register"}
+              </Text>
+            </TouchableOpacity>
+          </View>
           <View style={{ flex: 1.2, alignItems: "center", opacity: isBlurScreenActive ? 0.3 : 1 }}>
             <AbstractButton
               label={"TAP TO ENTER MOBILE NUMBER"}
               icons={[SVG_STRINGS.phoneIcon()]}
               onPressIcon={(i) => {
-                handlePhoneIconPress();
+                setGettingPhoneNumber(true);
               }}
               labelStyle={{
                 fontSize: 8,
@@ -217,7 +246,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
             />
             <View style={{ height: 5 }} />
             <AbstractButton
-              label={"SET PASSWORD"}
+              label={isLoginScreen ? "Enter Password" : "SET PASSWORD"}
               icons={[
                 SVG_STRINGS.patternIcon(),
                 SVG_STRINGS.thumbScanIcon(),
@@ -233,31 +262,55 @@ const SignUpSceneOne = ({ navigation, route }) => {
               outerSvg={SVG_STRINGS.buttonOne()}
             />
             <View style={{ height: 20 }} />
-            <AbstractButton
-              height={50}
-              width={Layout.WINDOW_WIDTH}
-              outerSvg={SVG_STRINGS.buttonOuterTwo()}
-              label={"enter your name"}
-              onPressButton={() => {
-                setGettingUserName(true);
+            {
+              isLoginScreen ?
+                null
+                : <AbstractButton
+                  height={50}
+                  width={Layout.WINDOW_WIDTH}
+                  outerSvg={SVG_STRINGS.buttonOuterTwo()}
+                  label={"enter your name"}
+                  onPressButton={() => {
+                    setGettingUserName(true);
+                  }}
+                  labelStyle={{ fontSize: 9, fontFamily: Typography.ROBODRON }}
+                  openInput={gettingUserName}
+                  inputTextStyle={{
+                    fontFamily: Typography.ROBODRON,
+                    fontSize: 11,
+                    color: Colors.WHITE,
+                    // backgroundColor: 'red'
+                  }}
+                  // keyboardType={"number-pad"}
+                  selectionColor={Colors.WHITE}
+                  onBlurInput={userNameInputLeave}
+                  setInputValue={(name) => {
+                    setUserName(name);
+                  }}
+                  inputValue={userName}
+                // isdisabled={true}
+                />
+            }
+
+            <TouchableOpacity
+              onPress={() => {
+                setIsLoginScreen(!isLoginScreen)
               }}
-              labelStyle={{ fontSize: 9, fontFamily: Typography.ROBODRON }}
-              openInput={gettingUserName}
-              inputTextStyle={{
-                fontFamily: Typography.ROBODRON,
-                fontSize: 11,
-                color: Colors.WHITE,
-                // backgroundColor: 'red'
-              }}
-              // keyboardType={"number-pad"}
-              selectionColor={Colors.WHITE}
-              onBlurInput={userNameInputLeave}
-              setInputValue={(name) => {
-                setUserName(name);
-              }}
-              inputValue={userName}
-            // isdisabled={true}
-            />
+              style={{ marginTop: 15 }}
+            >
+              <Text
+                style={{
+                  fontFamily: Typography.CALIBRI_REGULAR,
+                  fontSize: 16,
+                  textAlignVertical: "center",
+                  alignSelf: "flex-start",
+                  color: Colors.WHITE,
+                }}
+              >
+                {isLoginScreen ? "Don't have an account? Sing up" : "Already have an account? Sign in"}
+              </Text>
+
+            </TouchableOpacity>
           </View>
         </MyKeyboardAvoidView>
       </BackgroundImageLayer>

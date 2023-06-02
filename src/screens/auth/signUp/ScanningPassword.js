@@ -10,7 +10,7 @@ import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
 import * as LocalAuthentication from 'expo-local-authentication';
 
-const ScanningPassword = ({ backCall, navigation }) => {
+const ScanningPassword = ({ backCall }) => {
   const [scanned, setScanned] = useState(false);
   const [bocAtom, setBocAtom] = useAtom(BocApplicationAtom)
 
