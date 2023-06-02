@@ -8,6 +8,8 @@ import AbstractButton from '../../../components/app/abstractButton'
 
 import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
+import axios from 'axios'
+import { API_URL } from '../../../common/constants'
 
 const SelectionFields = ({ backCall }) => {
     const [showConfirmButton, setShowConfirmButton] = useState(false);
@@ -136,6 +138,22 @@ const SelectionFields = ({ backCall }) => {
                             }}
                             outerSvg={SVG_STRINGS.gradientConfirm()}
                             onPressButton={() => {
+                                // axios.post(`${API_URL}/registration/register`, {
+                                //     name: bocAtom.userName,
+                                //     phone: bocAtom.userPhone,
+                                //     passwordType: "Numeric",
+                                //     numericPassword: bocAtom.textPassword,
+                                //     patternPassword: bocAtom.patternPassword
+                                // }).then((res) => {
+                                //     //will save jwt token later
+                                //     navigation.navigate(Routes.CONTACT_PROFILE_TAB);
+                                // }).catch((err) => {
+                                //     if (err.response.data.error.message) {
+                                //         alert(err.response.data.error.message)
+                                //     } else {
+                                //         alert("Error in signing in user")
+                                //     }
+                                // })
                                 saveQuestionsInformation()
                             }}
                             selectionColor={Colors.TEXT_COLOR_3}

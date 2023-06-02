@@ -21,7 +21,9 @@ import MyKeyboardAvoidView from "../../../components/app/myKeyboardAvoidingView"
 import Routes from "../../../navigation/Routes";
 import { useAtom } from 'jotai'
 import { BocApplicationAtom } from '../../../components/app/atoms/bocAtom'
-import SelectionFields from "./SelectionFields";
+import SelectionFields from "./selectionFields";
+import axios from 'axios';
+import { API_URL } from "../../../common/constants";
 
 const SignUpSceneOne = ({ navigation, route }) => {
   const [userName, setUserName] = useState(false);
@@ -104,11 +106,11 @@ const SignUpSceneOne = ({ navigation, route }) => {
     if (bocAtom.userPhone != "") {
       setPhoneNumber(bocAtom.userPhone)
     }
-    if (bocAtom.userName != "" 
-    && bocAtom.userPhone != "" 
-    && bocAtom.patternPassword != "" 
-    && bocAtom.scanningPassword == true
-    && bocAtom.textPassword != "") {
+    if (bocAtom.userName != ""
+      && bocAtom.userPhone != ""
+      && bocAtom.patternPassword != ""
+      && bocAtom.scanningPassword == true
+      && bocAtom.textPassword != "") {
 
       if (questions == false) {
         handlePressIcons(4)
@@ -130,9 +132,6 @@ const SignUpSceneOne = ({ navigation, route }) => {
       Alert.alert("scan is required");
     } else if (bocAtom.textPassword == "") {
       Alert.alert("text password is required");
-    } else {
-      console.log("Success data", bocAtom)
-      navigation.navigate(Routes.CONTACT_PROFILE_TAB)
     }
   };
 

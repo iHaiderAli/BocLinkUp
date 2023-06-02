@@ -7,7 +7,7 @@ import { Colors } from "../styles";
 
 import SplashScreen from "../screens/auth/splashScreen";
 import SignUpSceneOne from "../screens/auth/signUp";
-import SelectionFields from "../screens/auth/signUp/SelectionFields";
+import SelectionFields from "../screens/auth/signUp/selectionFields";
 import EntryPointScene from "../screens/auth/signUp/entryPointScene";
 import ChangeNumber from "../screens/main/changeNumber";
 import TwoWaySecurity from "../screens/main/twoWaySecurity";
