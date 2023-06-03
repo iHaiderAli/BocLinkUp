@@ -112,7 +112,6 @@ const SignUpSceneOne = ({ navigation, route }) => {
     } else if (questions == false) {
       handlePressIcons(4)
     } else {
-      console.log("Signup API Calling")
       // axios.post(`${API_URL}/registration/register`, {
       //   name: bocAtom.userName,
       //   phone: bocAtom.userPhone,
@@ -121,7 +120,6 @@ const SignUpSceneOne = ({ navigation, route }) => {
       //   patternPassword: bocAtom.patternPassword
       // }).then((res) => {
       //   //will save jwt token later
-      //   console.log("testing", res)
       //   navigation.navigate(Routes.USER_VIBE)
       // }).catch((err) => {
       //   if (err.response.data.error.message) {
@@ -134,14 +132,28 @@ const SignUpSceneOne = ({ navigation, route }) => {
   };
 
   const validateLoginDataAndApi = () => {
+    console.log(bocAtom)
     if (bocAtom.userPhone == "") {
       Alert.alert("Phone number is required");
     } else if (bocAtom.patternPassword == "" && bocAtom.scanningPassword == false && bocAtom.textPassword == "") {
       Alert.alert("Please enter any password");
     } else {
-      console.log("Login API call", bocAtom)
-
-      //Login API call 
+      // axios.post(`${API_URL}/registration/login`, {
+      //   phone: bocAtom.userPhone,
+      //   passwordType: bocAtom.patternPassword ? 'pattern' : 
+      //   bocAtom.textPassword ? 'password' : 'fingerprint',
+      //   password: bocAtom.patternPassword || bocAtom.textPassword,
+      // }).then((res) => {
+      //   //will save jwt token later
+      //   console.log("testing", res)
+      //   navigation.navigate(Routes.USER_VIBE)
+      // }).catch((err) => {
+      //   if (err.response.data.error.message) {
+      //     alert(err.response.data.error.message)
+      //   } else {
+      //     alert("Error in loging in user")
+      //   }
+      // })
     }
   };
 
@@ -307,7 +319,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
                   color: Colors.WHITE,
                 }}
               >
-                {isLoginScreen ? "Don't have an account? Sing up" : "Already have an account? Sign in"}
+                {isLoginScreen ? "Don't have an account? sign up" : "Already have an account? Sign in"}
               </Text>
 
             </TouchableOpacity>
