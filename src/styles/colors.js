@@ -17,3 +17,6 @@ export const BORDER_COLOR= "#F9E285";
 
 export const DANGER_COLOR = '#F72F2F';
 export const DARK_GREY='#707070';
+export const TAB_LIGHT='#288181';
+export const TAB_DARK='#4DFFFF';
+export const COLOR_ONLINE='#14FF0C';

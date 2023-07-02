@@ -7,7 +7,8 @@ import {
   StatusBar,
   SafeAreaView as RNSafeAreView,
   NativeModules,
-  Platform
+  Platform,
+  ImageBackground
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
@@ -23,9 +24,11 @@ import FocusAwareStatusBar from "../../../components/app/focusAwareStatusBar";
 import * as Contacts from 'expo-contacts';
 
 const { StatusBarManager } = NativeModules;
+
 const UserVibe = () => {
 
-  const [constacts, setConstacts] = useState([])
+  const [constacts, setConstacts] = useState([]);
+  const [selectedContact, setSelectedContact] = useState({});
 
   useEffect(() => {
     (async () => {
@@ -43,25 +46,19 @@ const UserVibe = () => {
   }, []);
 
   return (
-    <SafeAreaView
-      style={{
-        flex: 1,
-        paddingTop: Platform.OS === "android" ? StatusBarManager.HEIGHT : 0,
-      }}
+    <ImageBackground style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}
+      source={require("../../../../assets/images/home_bg.png")}
+      resizeMode={'cover'}
     >
       <View style={{ ...styles.container }}>
-        <FocusAwareStatusBar
-          translucent={true}
-          backgroundColor={"transparent"}
-          // barStyle={"dark-content"}
-          hidden
-        />
-        {/* <TopView /> */}
+        <TopView selectedContact={selectedContact} />
         <View style={styles.innerContainer}>
           <View style={styles.userListContainer}>
-            <UsersList usersList={constacts}/>
+            <UsersList usersList={constacts} onContactClicked={(item) => {
+              setSelectedContact(item)
+            }} />
           </View>
-          <View style={styles.videoContainer}>
+          {/* <View style={styles.videoContainer}>
             <Image
               source={require("../../../../assets/images/imageVirtual.png")}
               style={{ flex: 1 }}
@@ -77,7 +74,7 @@ const UserVibe = () => {
               <LineLoader />
               <LineAnim />
             </View>
-          </View>
+          </View> */}
         </View>
 
         {/* <View
@@ -113,7 +110,7 @@ const UserVibe = () => {
           </View>
         </View> */}
       </View>
-    </SafeAreaView>
+    </ImageBackground>
   );
 };
 
@@ -134,7 +131,7 @@ const styles = StyleSheet.create({
   },
   videoContainer: {
     height: "100%",
-    backgroundColor: Colors.BLACK_COLOR,
+    // backgroundColor: Colors.BLACK_COLOR,
   },
   play: {
     fontSize: 14,

@@ -10,15 +10,19 @@ import {
   StatusBar,
 } from "react-native";
 import { Colors } from "../../../styles";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
-const UsersList = ({ usersList }) => {
+const UsersList = ({ usersList, onContactClicked }) => {
   return (
     <View>
       <FlatList
         data={usersList}
         keyExtractor={(item, index) => `user_list_${index}`}
         renderItem={({ item, index }) => (
-          <View
+          <TouchableOpacity
+            onPress={() => {
+              onContactClicked(item)
+            }}
             key={`item_${index}`}
             style={{
               flex: 1,
@@ -42,7 +46,7 @@ const UsersList = ({ usersList }) => {
               color: Colors.WHITE,
             }}>{usersList[index].firstName}</Text>
 
-          </View>
+          </TouchableOpacity>
         )}
       />
     </View>
