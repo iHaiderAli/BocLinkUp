@@ -248,7 +248,7 @@ const SignUpSceneOne = ({ navigation, route }) => {
                 color: Colors.WHITE,
                 // backgroundColor: 'red'
               }}
-              keyboardType={"number-pad"}
+              keyboardType={"default"}
               selectionColor={Colors.WHITE}
               onBlurInput={phoneInputLeave}
               setInputValue={(phone) => {

@@ -9,26 +9,13 @@ import {
   Dimensions,
   StatusBar,
 } from "react-native";
+import { Colors } from "../../../styles";
 
-const UsersList = () => {
+const UsersList = ({ usersList }) => {
   return (
     <View>
       <FlatList
-        data={[
-          { _id: 1, name: "Ali" },
-          { _id: 2, name: "Ali" },
-          { _id: 3, name: "Ali" },
-          { _id: 4, name: "Ali" },
-          { _id: 5, name: "Ali" },
-          { _id: 6, name: "Ali" },
-          { _id: 7, name: "Ali" },
-          { _id: 8, name: "Ali" },
-          { _id: 9, name: "Ali" },
-          { _id: 10, name: "Ali" },
-          { _id: 11, name: "Ali" },
-          { _id: 12, name: "Ali" },
-        ]}
-        // key={"data_list"}
+        data={usersList}
         keyExtractor={(item, index) => `user_list_${index}`}
         renderItem={({ item, index }) => (
           <View
@@ -50,6 +37,11 @@ const UsersList = () => {
               }}
               resizeMode={"stretch"}
             />
+            <Text style={{
+              fontSize: 14,
+              color: Colors.WHITE,
+            }}>{usersList[index].firstName}</Text>
+
           </View>
         )}
       />

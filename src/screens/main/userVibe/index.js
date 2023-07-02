@@ -7,10 +7,11 @@ import {
   StatusBar,
   SafeAreaView as RNSafeAreView,
   NativeModules,
+  Platform
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UsersList from "./users";
 import { Colors } from "../../../styles";
 import LineLoader from "./lineLoader";
@@ -19,13 +20,33 @@ import AbstractButton from "../../../components/app/abstractButton";
 import { SVG_STRINGS } from "../../../../assets/svgStrings";
 import TopView from "./topView";
 import FocusAwareStatusBar from "../../../components/app/focusAwareStatusBar";
+import * as Contacts from 'expo-contacts';
+
 const { StatusBarManager } = NativeModules;
 const UserVibe = () => {
+
+  const [constacts, setConstacts] = useState([])
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Contacts.requestPermissionsAsync();
+      if (status === 'granted') {
+        const { data } = await Contacts.getContactsAsync({
+          fields: [Contacts.Fields.Emails],
+        });
+
+        if (data.length > 0) {
+          setConstacts(data);
+        }
+      }
+    })();
+  }, []);
+
   return (
     <SafeAreaView
       style={{
         flex: 1,
-        paddingTop: Platform.OS === "android" ? -StatusBarManager.HEIGHT : 0,
+        paddingTop: Platform.OS === "android" ? StatusBarManager.HEIGHT : 0,
       }}
     >
       <View style={{ ...styles.container }}>
@@ -35,10 +56,10 @@ const UserVibe = () => {
           // barStyle={"dark-content"}
           hidden
         />
-        <TopView />
+        {/* <TopView /> */}
         <View style={styles.innerContainer}>
           <View style={styles.userListContainer}>
-            <UsersList />
+            <UsersList usersList={constacts}/>
           </View>
           <View style={styles.videoContainer}>
             <Image
@@ -58,7 +79,8 @@ const UserVibe = () => {
             </View>
           </View>
         </View>
-        <View
+
+        {/* <View
           style={{
             height: 60,
             backgroundColor: Colors.BLACK_COLOR,
@@ -73,7 +95,7 @@ const UserVibe = () => {
               alignItems: "center",
             }}
           >
-            {/* <AbstractButton
+            <AbstractButton
               outerSvg={SVG_STRINGS.buttonOuter5()}
               outerHeight={35}
               height={35}
@@ -87,9 +109,9 @@ const UserVibe = () => {
               height={35}
               width={120}
               label={"MUTE"}
-            /> */}
+            />
           </View>
-        </View>
+        </View> */}
       </View>
     </SafeAreaView>
   );
