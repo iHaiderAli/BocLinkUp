@@ -8,13 +8,16 @@ import {
   SafeAreaView as RNSafeAreView,
   NativeModules,
   Platform,
-  ImageBackground
+  ImageBackground,
+  TouchableHighlight,
+  TouchableWithoutFeedback
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import AbstractInput from "../../../components/app/abstractInput";
 
 import React, { useEffect, useState } from "react";
 import UsersList from "./users";
-import { Colors } from "../../../styles";
+import { Colors, Layout } from "../../../styles";
 import LineLoader from "./lineLoader";
 import LineAnim from "./lineAnim";
 import AbstractButton from "../../../components/app/abstractButton";
@@ -29,6 +32,7 @@ const UserVibe = () => {
 
   const [constacts, setConstacts] = useState([]);
   const [selectedContact, setSelectedContact] = useState({});
+  const [inputMessage, setInputMessage] = useState("");
 
   useEffect(() => {
     (async () => {
@@ -77,6 +81,104 @@ const UserVibe = () => {
           </View> */}
         </View>
 
+        <View style={{ height: 60, display: "flex", justifyContent: "center" }}>
+
+          <View style={{ height: 40, display: "flex", alignItems: "center" }}>
+            <ImageBackground
+              source={require("../../../../assets/images/chat_input_bg.png")}
+              resizeMode={'cover'}
+              style={{ height: 40, width: "98%", position: "relative" }}
+            >
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  console.log("testing attachment")
+                }}>
+                <Image
+                  source={require("../../../../assets/images/chat_attachment.png")}
+                  style={{
+                    width: 59.71, height: 25.28, marginLeft: 25, marginTop: 3,
+                    position: "absolute"
+                  }}
+                  resizeMode={"cover"}
+                />
+              </TouchableWithoutFeedback>
+
+
+
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  console.log("testing")
+                }}>
+                <View style={{
+                  marginRight: 57, marginTop: 6,
+                }}>
+                  <Image
+                    source={require("../../../../assets/images/chat_emoji.png")}
+                    style={{
+                      width: 35.13, height: 30, alignSelf: "flex-end",
+                      position: "absolute"
+                    }}
+                    resizeMode={"cover"}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  console.log("testing camera")
+                }}>
+                <View style={{ marginRight: 32 }}>
+                  <Image
+                    source={require("../../../../assets/images/chat_camera.png")}
+                    style={{
+                      width: 35.13, height: 30, alignSelf: "flex-end",
+                      position: "absolute"
+                    }}
+                    resizeMode={"cover"}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+
+              <TouchableWithoutFeedback
+                onPress={() => {
+                  console.log("testing mic")
+                }}>
+                <View style={{ marginRight: 8 }}>
+
+                  <Image
+                    source={require("../../../../assets/images/chat_mic.png")}
+                    style={{
+                      width: 26.09, height: 25.28, alignSelf: "flex-end", marginTop: 5,
+                      position: "absolute"
+                    }}
+                    resizeMode={"cover"}
+                  />
+                </View>
+              </TouchableWithoutFeedback>
+
+              <AbstractInput
+                height={25}
+                width={Layout.WINDOW_WIDTH - 180}
+                // outerSvg={SVG_STRINGS.buttonOuterTwo(Colors.COLOR_INPUT_STROKE)}
+                placeholder={"type a message"}
+                placeholderTextColor={Colors.WHITE}
+                // autoFocus
+                _styleText={{
+                  paddingHorizontal: 0, textAlign: 'left',
+                }}
+                _style={{ marginLeft: 95 }}
+                selectionColor={Colors.WHITE}
+                onDoneClicked={(text) => {
+                  alert(text)
+                }}
+              />
+
+            </ImageBackground>
+
+          </View>
+
+        </View>
+
         {/* <View
           style={{
             height: 60,
@@ -110,7 +212,7 @@ const UserVibe = () => {
           </View>
         </View> */}
       </View>
-    </ImageBackground>
+    </ImageBackground >
   );
 };
 
@@ -126,7 +228,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   userListContainer: {
-    height: "95%",
+    // height: "90%",
     width: 80,
   },
   videoContainer: {

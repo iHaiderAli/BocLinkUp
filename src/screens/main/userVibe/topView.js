@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, ImageBackground } from "react-native";
 import React from "react";
 import { Colors } from "../../../styles";
 import FocusAwareStatusBar from "../../../components/app/focusAwareStatusBar";
@@ -8,9 +8,8 @@ const TopView = (selectedContact) => {
   return (
     <SafeAreaView
       style={{
-        height: 120,
+        height: 180,
         flexDirection: "column",
-        // backgroundColor: "red"
       }}>
       {/* <FocusAwareStatusBar
         translucent={true}
@@ -53,32 +52,37 @@ const TopView = (selectedContact) => {
 
         </View>
 
-        <View
+        <ImageBackground
+          resizeMode={'cover'}
+          source={require("../../../../assets/images/tab_shadow.png")}
           style={{
             ...styles.stylestatusBarIcon,
-            transform: [{ rotate: "-9.04deg" }]
+            transform: [{ rotate: "-9.04deg" }],
+            height: 60,
+            width: 75
           }}
         >
           <Text
             style={{
               ...styles.tabText,
+              color: Colors.TAB_DARK
             }}
           >
             CHATS
           </Text>
-
-          <View style={{ height: 10.1, width: 10.1, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: Colors.TAB_LIGHT, marginLeft: 5, borderRadius: 100 }}>
+          <View style={{ height: 12.1, width: 12.1, display: "flex", alignItems: "center", justifyContent: "center", backgroundColor: Colors.TAB_LIGHT, marginLeft: 5, borderRadius: 100 }}>
             <Text
               style={{
-                fontSize: 10.1,
-                color: "#000000",
+                fontSize: 8,
+                // color: "#000000",
+                color: Colors.TAB_DARK,
                 paddingTop: 0
               }}
             >
               4
             </Text>
           </View>
-        </View>
+        </ImageBackground>
         <View
           style={{
             ...styles.stylestatusBarIcon,
